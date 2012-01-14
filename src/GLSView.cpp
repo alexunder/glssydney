@@ -18,9 +18,9 @@ static char THIS_FILE[] = __FILE__;
 CEvent eventdraw;
 #include <math.h>
 extern   "C"     
-  {   
-#include "levmar-2.3/lm.h"
-  }
+{   
+#include "lm.h"
+}
 #define MAX 50
 /////////////////////////////////////////////////////////////////////////////
 // CGLSView
@@ -277,6 +277,7 @@ void CGLSView::OnBtnRunkriging()
 
 int CGLSView::ReadData()
 {
+	int i;
 	m_PointArray2.RemoveAll();
 	m_PointArray2.SetSize(0);
 	m_PointArrayGrid2.RemoveAll();
@@ -356,7 +357,7 @@ int CGLSView::ReadData()
 		CString m_strleft,m_strright;
 		double temp ;
 		Filesrc.SeekToBegin();	
-		for (int i = 0;i<m_PointNum;i++)
+		for (i = 0;i<m_PointNum;i++)
 		{
 			Filesrc.ReadString(FileData);
 			m_strright = FileData;
@@ -593,6 +594,9 @@ void CGLSView::Calc_vario()
 }
 void CGLSView::Calc_semvdistance_median()
 {
+	int i;
+	int n;
+
 	Phr.RemoveAll();
 	Phr.SetSize(0);
 	m_ArrayForMedian.RemoveAll();
@@ -603,7 +607,7 @@ void CGLSView::Calc_semvdistance_median()
 	double m_sumhm[MAX];
 	int m_count[MAX];    //each section pair
 	Semivar semivar;
-	for (int i = 0;i< MAX ;i++)
+	for (i = 0;i< MAX ;i++)
 	{
 		m_count[i] = 0;
 		m_mediansemv[i] = 0;
@@ -615,7 +619,7 @@ void CGLSView::Calc_semvdistance_median()
 	double m_step = maxh /(nlag+1);//the length of step
 	m_tolag = m_step*0;//???????????????????????????
 
-	for (int n=0;n<nlag;n++)
+	for (n=0;n<nlag;n++)
 	{
 		m_Element.RemoveAll();
 		m_Element.SetSize(0);
@@ -706,8 +710,10 @@ void CGLSView::Calc_semvdistance()
 	double m_sumsemv[MAX]; //each section meansemv
 	double m_sumhm[MAX];
 	int m_count[MAX];    //each section pair
+	int i;
+
 	Semivar semivar;
-	for (int i = 0;i< MAX ;i++)
+	for (i = 0;i< MAX ;i++)
 	{
 		m_count[i] = 0;
 		m_sumsemv[i] = 0;
@@ -825,13 +831,14 @@ void expfunc(double *p, double *x, int m, int n, void *data)
 
 void CGLSView::levmar()
 {
+	int k;
 	const int n=Phr.GetSize(), m=3; // 50 measurements, 3 parameters
 	double p[3], opts[LM_OPTS_SZ], info[LM_INFO_SZ];
 	double dbMax=0,dbMin=6;
 	double nMaxDistance=0, meandis=0;
 	m_weight = 	((CComboBox*)GetDlgItem(IDC_COMBO_WEIGHT))->GetCurSel();
 
-	for (int k = 0;k<50;k++)
+	for (k = 0;k<50;k++)
 	{
 		m_data.h[k] = 0;
 		m_data.r[k] = 0;
@@ -992,9 +999,12 @@ void CGLSView::predict()
 		}
 		double *B=new double[n];//????
 		
-		for(int ii=0;ii<N;ii++)
+		int ii;
+		int jj;
+
+		for(ii=0;ii<N;ii++)
 		{
-			for(int jj=ii;jj<N;jj++)
+			for(jj=ii;jj<N;jj++)
 			{
 				if (ii==jj)
 				{
@@ -1418,13 +1428,16 @@ void CGLSView::FunRK()
 
 void CGLSView::Regression()
 {
+	int i;
+	int j;
+
 	double **M,*z,*bf,**MT,*MM;
 	z = new double[m_PointNum];
 	bf = new double[m_ParaNum+1];
 	M = new double*[m_PointNum];
 	MT= new double*[m_ParaNum+1];
 	MM = new double[(m_ParaNum+1)*(m_ParaNum+1)];
-	for (int i=0; i<m_PointNum; i++) 
+	for (i=0; i<m_PointNum; i++) 
 	{
 		M[i] = new double[m_ParaNum+1];
 	}
@@ -1438,7 +1451,7 @@ void CGLSView::Regression()
 	}
 	for (i=0;i<m_PointNum;i++)
 	{
-		for (int j=0;j<=m_ParaNum;j++)
+		for (j=0;j<=m_ParaNum;j++)
 		{
 			if (j==0)
 			{
@@ -1502,6 +1515,8 @@ void CGLSView::GetResult()
 	{
 		return;
 	}
+	int i;
+
 	m_fianlPredictPoint.RemoveAll();
 	m_fianlPredictPoint.SetSize(0);
 	double  finalZ =0;
@@ -1509,7 +1524,7 @@ void CGLSView::GetResult()
 	double *m =new double[m_ParaNum+1];
 	double	*MM = new double[(m_ParaNum+1)*(m_ParaNum+1)];
 	M = new double*[m_PointNum];
-	for (int i =0;i<m_PointNum;i++)
+	for (i =0;i<m_PointNum;i++)
 	{
 		M[i] = new double[m_ParaNum+1];
 	}
@@ -2007,7 +2022,7 @@ void CGLSView::predictLocalGLS()
 	m_fianlPredictPoint.SetSize(0);
 
 	//??????????
-	int I,J,i,N,n;
+	int I,J,i,j,N,n;
 	double dist=0,hh=0,Gx=0,Gy=0,rr=0,VarEsum;
 	int pro =0;
 	
@@ -2359,10 +2374,13 @@ void CGLSView::predictLocalGLS()
 		
 		//nonlinear least squares
 		levmar();
+		int ii;
+		int jj;
+
 //----------------------------------kriging---------------------------------------------
-		for(int ii=0;ii<N;ii++)
+		for(ii=0;ii<N;ii++)
 		{
-			for(int jj=ii;jj<N;jj++)
+			for(jj=ii;jj<N;jj++)
 			{
 				if (ii==jj)
 				{
@@ -2394,7 +2412,7 @@ void CGLSView::predictLocalGLS()
 			continue;//MessageBox("A",NULL,MB_OK);
 		for (i=0;i<N;i++)
 		{
-			for (int j=i;j<N;j++)
+			for (j=i;j<N;j++)
 			{
 				if (i==j)
 				{
@@ -2578,7 +2596,7 @@ void CGLSView::DrawWave(CDC *pDC, double x, double y)
 {
  	double X,Y,X1,Y1;
  	CRect rct;
- 	
+ 	int i;
  	// ??????????
  	CWnd* pWnd = GetDlgItem(IDC_STATIC_LOCAL);
  	
@@ -2588,7 +2606,7 @@ void CGLSView::DrawWave(CDC *pDC, double x, double y)
 	pControlDC->SelectObject(&RectPen); 
 			
 	pControlDC->Rectangle(rct.left+10,rct.top+10,rct.right-10,rct.bottom-10); 
-	for (int i = 0;i<m_PredictPoint2.GetSize();i++)
+	for (i = 0;i<m_PredictPoint2.GetSize();i++)
 	{
 		X =50+ (m_PredictPoint2[i][m_icolumnX-1] -Xmin)/(Xmax-Xmin)*(rct.right/2+100);
 		Y = (rct.bottom/2-50) - (m_PredictPoint2[i][m_icolumnY-1]-Ymin)/(Ymax-Ymin)*(rct.bottom/2-50);
@@ -2661,12 +2679,13 @@ void CGLSView::OnRadioLocal()
 void CGLSView::OnBtnVariogram() 
 {
 	// TODO: Add your control notification handler code here
+	int i;
 	b_RunbtndownFlag =TRUE;
 	int n = ReadData()	;
 	g_linearpara.RemoveAll();
 	g_linearpara.SetSize(0);
 	m_ParaNum =0;
-	for (int i=0;i<=m_ParaNum;i++)
+	for (i=0;i<=m_ParaNum;i++)
 	{
 		g_linearpara.Add(0);
 	}
