@@ -81,10 +81,11 @@ BOOL CGridMap::OnInitDialog()
 
 void CGridMap::OnPaint() 
 {
+	int i;
 	CPaintDC dc(this); // device context for painting
 	
 	// TODO: Add your message handler code here
-		if (m_PointArray.GetSize()==0)
+	if (m_PointArray.GetSize()==0)
 	{
 		MessageBox("there is no data",NULL,MB_OK);
 		OnOK();
@@ -94,7 +95,7 @@ void CGridMap::OnPaint()
 	dc.LineTo(430,290);	
 	int Red,Green,Blue;
 	CString str;
-	for(int i=0;i<=4;i++)   //Ð´×Ý×ø±ê
+	for(i=0;i<=4;i++)   //Ð´×Ý×ø±ê
 	{
 		str.Format(_T("%.3f"),(dyMax-dyMin)/5*(5-i)+dyMin);
 		dc.TextOut(10,35+i*60,str,10);
