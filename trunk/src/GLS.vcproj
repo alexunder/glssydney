@@ -456,5 +456,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="GLS.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

@@ -357,6 +357,7 @@ int CGLSView::ReadData()
 		CString m_strleft,m_strright;
 		double temp ;
 		Filesrc.SeekToBegin();	
+
 		for (i = 0;i<m_PointNum;i++)
 		{
 			Filesrc.ReadString(FileData);
@@ -408,7 +409,7 @@ int CGLSView::ReadData()
 			MessageBox("read grid data failed",NULL,MB_OK);
 			return 0;
 		}
-		Filegrid.SeekToBegin();//?????
+		Filegrid.SeekToBegin();
 		Filegrid.ReadString(FileData);
 		int n=0,m=0,m_colNum=0;
 		do 
@@ -1723,285 +1724,10 @@ void CGLSView::FunGLS()
 		}
 				
 		levmar();
- //-------------------over-----------------
-// 		double **M,**MT,*z,*bf;
-// 		z = new double[m_PointNum];
-// 		M = new double*[m_PointNum];
-// 		MT= new double*[m_ParaNum+1];
-// 		bf = new double[m_ParaNum+1];
-// 		for (int i=0; i<m_PointNum; i++) 
-// 		{
-// 			M[i] = new double[m_ParaNum+1];
-// 		}
-// 		for (i=0;i<=m_ParaNum;i++)
-// 		{
-// 			MT[i] = new double[m_PointNum];
-// 		}
-// 		for (int j=0;j<m_PointNum;j++)
-// 		{
-// 			z[j]=m_PointArray2[j][m_icolumnData-1];
-// 		}
-// 		for (i=0;i<m_ParaNum+1;i++)
-// 		{
-// 			bf[i]=0;
-// 		}
-// 
-// 		for (i=0;i<m_PointNum;i++)
-// 		{
-// 			for (int j=0;j<=m_ParaNum;j++)
-// 			{
-// 				if (j==0)
-// 				{
-// 					M[i][j] =1;
-// 				}
-// 				else
-// 				{
-// 					M[i][j] = m_PointArray2[i][m_icolumnPara1-1+j-1];
-// 				}
-// 			}			
-// 		}
-// 		for(i=0;i<m_PointNum;i++) 
-// 			for(int j=0;j<=m_ParaNum;j++)
-// 				MT[j][i]=M[i][j]; 	//M ?????
-// 		double *M1 = new double[m_PointNum*(m_ParaNum+1)];
-// 		double *MT1 = new double[m_PointNum*(m_ParaNum+1)];//M ?????
-// 		double *temp = new double[m_PointNum*(m_ParaNum+1)];
-// 		double *temp1 = new double[(m_ParaNum+1)*(m_ParaNum+1)];
-// 		double *temp2 = new double[m_PointNum*(m_ParaNum+1)];
-// 		
-// 		int k = 0;
-// 		for (i=0;i<m_PointNum;i++)
-// 		{
-// 			for (int j=0;j<=m_ParaNum;j++)
-// 			{
-// 				M1[k++] = M[i][j];	
-// 			}
-// 		}
-// 		k=0;
-// 		for ( i=0;i<=m_ParaNum;i++)
-// 		{
-// 			for (j=0;j<m_PointNum;j++)
-// 			{
-// 				MT1[k++] = MT[i][j];	
-// 			}
-// 		}
-//  		//iteration 
-// 		double Z;
-// 		double finalZ =0;
-// 		double k0 = para[0]+para[1];
-// 		double **K = new double*[m_PointNum];
-// 		double *K1 = new double[m_PointNum*m_PointNum];
-// 		for (i=0;i<m_PointNum;i++)
-// 		{
-// 			K[i] = new double[m_PointNum];
-// 		}
-// 		
-// 		double h =0;
-// 		double *sk = new double[m_PointNum];
-// 		double *temp3 = new double[m_PointNum];
-// 		double *temp4 = new double;
-// 		double *temp5 =new double[m_ParaNum+1];	
-// 		double *temp6 =new double[m_ParaNum+1];	
-// 		double *m= new double[m_ParaNum+1];
-// 
-// 		CString m_iterstr;
-// 		GetDlgItemText(IDC_EDIT_ITERATE,m_iterstr);
-// 		int m_iternum;
-// 		m_iternum = atoi(m_iterstr);
-// 		for (int m_iter=0;m_iter<m_iternum;m_iter++)
-// 		{	
-// 
-// 			//?K
-// 			for (i=0;i<m_PointNum;i++)
-// 			{
-// 				for (j=i;j<m_PointNum;j++)
-// 				{
-// 					if (i==j)
-// 					{
-// 						K[i][j] = para[0]+para[1];//?????
-// 					}
-// 					else
-// 					{
-// 						h=::sqrt(::pow((m_PointArray2[i][m_icolumnX-1]-m_PointArray2[j][m_icolumnX-1]),2)+::pow((m_PointArray2[i][m_icolumnY-1]-m_PointArray2[j][m_icolumnY-1]),2));
-// 						K[i][j] = para[1]*exp(-h/para[2]);
-// 					}
-// 					K[j][i] = K[i][j];
-// 				}
-// 			}
-// 			k=0;
-// 			for ( i=0;i<m_PointNum;i++)
-// 			{
-// 				for (j=0;j<m_PointNum;j++)
-// 				{
-// 					K1[k++] = K[i][j];	
-// 				}
-// 			}
-// 			//(MT*K-1*M)-1*MT*K-1*Z
-// 			rinv(K1,m_PointNum);
-// 			trmul(MT1,K1,m_ParaNum+1,m_PointNum,m_PointNum,temp);//MT*K-1
-// 			trmul(temp,M1,m_ParaNum+1,m_PointNum,m_ParaNum+1,temp1);
-// 			rinv(temp1,m_ParaNum+1);//(MT*K-1*M)-1
-// 			trmul(temp1,MT1,m_ParaNum+1,m_ParaNum+1,m_PointNum,temp);
-// 			trmul(temp,K1,m_ParaNum+1,m_PointNum,m_PointNum,temp2);
-// 			trmul(temp2,z,m_ParaNum+1,m_PointNum,1,bf);
-// 			//get residual
-// 			m_Residual.RemoveAll();
-// 			m_Residual.SetSize(0);
-// 			
-// 			for (i =0;i<m_PointNum;i++)
-// 			{	
-// 				Z = 0;
-// 				m_point.x = m_PointArray2[i][m_icolumnX-1];
-// 				m_point.y = m_PointArray2[i][m_icolumnY-1];
-// 				for (int j =0;j<m_ParaNum;j++)
-// 				{
-// 					Z = Z + bf[j+1]*m_PointArray2[i][m_icolumnPara1-1+j];
-// 				}
-// 				Z = Z+ bf[0];
-// 				m_point.z = m_PointArray2[i][m_icolumnData-1]-Z;
-// 				m_Residual.Add(m_point);	
-// 			}
-// 			
-// 			m_Glinearpara.RemoveAll();
-// 			m_Glinearpara.SetSize(0);
-// 			for (i=0;i<m_ParaNum+1;i++)
-// 			{
-// 				m_Glinearpara.Add(bf[i]);
-// 			}
-// 			Calc_vario();
-// 			
-// 			//mean semv<-->distance of residual
-// 			if (m_estimators)
-// 			{
-// 				Calc_semvdistance_median();
-// 			} 
-// 			else
-// 			{
-// 				Calc_semvdistance();
-// 			}
-// 					
-// 			//nonlinear least squares
-// 			levmar();
-// 		}
-// 		delete[] bf;
+
 		m_fianlPredictPoint.RemoveAll();
 		predict();
-// 		//k0 -kt*K-1*k+dt*(MT*K-1*M)-1*d
-// 		if (m_PointArrayGridNew.GetSize()==0)
-// 		{
-// 			return;
-// 		}
-// 		m_fianlPredictPoint.RemoveAll();
-// 		m_fianlPredictPoint.SetSize(0);
-// 		//?K
-// 		for (i=0;i<m_PointNum;i++)
-// 		{
-// 			for (j=i;j<m_PointNum;j++)
-// 			{
-// 				if (i==j)
-// 				{
-// 					K[i][j] = para[0]+para[1];//?????
-// 				}
-// 				else
-// 				{
-// 					h=::sqrt(::pow((m_PointArray2[i][m_icolumnX-1]-m_PointArray2[j][m_icolumnX-1]),2)+::pow((m_PointArray2[i][m_icolumnY-1]-m_PointArray2[j][m_icolumnY-1]),2));
-// 					K[i][j] = para[1]*exp(-h/para[2]);
-// 				}
-// 				K[j][i] = K[i][j];
-// 			}
-// 		}
-// 		k=0;
-// 		for ( i=0;i<m_PointNum;i++)
-// 		{
-// 			for (j=0;j<m_PointNum;j++)
-// 			{
-// 				K1[k++] = K[i][j];	
-// 			}
-// 		}
-// 		rinv(K1,m_PointNum);
-// 				
-// 		for (int I=0;I<m_PointArrayGrid2.GetSize();I++)
-// 		{
-// 			Z = 0;
-// 			m_fianlpoint.x = m_PointArrayGrid2[I][m_icolumnX-1];
-// 			m_fianlpoint.y = m_PointArrayGrid2[I][m_icolumnY-1];
-// 			for (int j =0;j<m_ParaNum;j++)
-// 			{
-// 				Z= Z + m_Glinearpara.GetAt(j+1)*m_PointArrayGrid2[I][m_icolumnPara1-1+j];
-// 			}
-// 			Z =Z+ m_Glinearpara[0];
-// 			
-// 			m_fianlpoint.regression = Z;
-// 			finalZ = m_PointArrayGridNew.GetAt(I).z + Z;
-// 			m_fianlpoint.x = m_PointArrayGridNew.GetAt(I).x;
-// 			m_fianlpoint.y = m_PointArrayGridNew.GetAt(I).y;
-// 			m_fianlpoint.z = finalZ;
-// 			m_fianlpoint.reskrig = m_PointArrayGridNew.GetAt(I).z;
-// 			m_fianlpoint.varianceK = varianceK.GetAt(I);
-// 			for (j=0;j<m_PointNum;j++)
-// 			{
-// 				h=::sqrt(::pow((m_PointArray2[j][m_icolumnX-1]-m_PointArrayGrid2[I][m_icolumnX-1]),2)+::pow((m_PointArray2[j][m_icolumnY-1]-m_PointArrayGrid2[I][m_icolumnY-1]),2));
-// 				sk[j] = para[1]*exp(-h/para[2]);
-// 			}
-// 			trmul(sk,K1,1,m_PointNum,m_PointNum,temp3);
-// 			trmul(temp3,sk,1,m_PointNum,1,temp4);//kt*K-1*k
-// 			temp4[0] = k0 - temp4[0];
-// 			m_fianlpoint.variance1 = temp4[0];
-// 			//////////////////////
-// 			trmul(MT1,K1,m_ParaNum+1,m_PointNum,m_PointNum,temp);//MT*K-1
-// 			trmul(temp,sk,m_ParaNum+1,m_PointNum,1,temp5);//MT*K-1*k      d = m-MT*K-1*k
-// 			for (i = 0;i<=m_ParaNum;i++)
-// 			{
-// 				if (i==0)
-// 				{
-// 					m[i]=1;
-// 				}
-// 				else
-// 				{
-// 					m[i] = m_PointArrayGrid2[I][m_icolumnPara1-1+i-1];
-// 				}	
-// 			}
-// 			for (i=0;i<=m_ParaNum;i++)
-// 			{
-// 				m[i]= m[i] -temp5[i];//d
-// 			}
-// 			
-// 			trmul(m,temp1,1,m_ParaNum+1,m_ParaNum+1,temp6);
-// 			trmul(temp6,m,1,m_ParaNum+1,1,temp4);//dt*()*d
-// 			m_fianlpoint.variance2 = temp4[0];
-// 			m_fianlpoint.variance = m_fianlpoint.variance1+ m_fianlpoint.variance2;
-// 			m_fianlpoint.para1 =para[0];
-// 			m_fianlpoint.para2 = para[1];
-// 			m_fianlpoint.para3 = para[2];
-// 			for (i=0;i<=m_ParaNum;i++)
-// 			{
-// 				m_fianlpoint.bf[i] = g_linearpara[i];
-//  			}
-// 			m_fianlPredictPoint.Add(m_fianlpoint);
-// 			if (m_fianlPredictPoint.GetSize()==50)
-// 			{
-// 				outputdataGLS();
-// 				m_fianlPredictPoint.RemoveAll();
-// 			}
-// 			CString tmp; 
-// 			tmp.Format("%d/%d", I+1,m_GridPointNum); 
-// 			m_progress.ShowWindow(TRUE);
-// 			m_progress.SetWindowText(tmp); 
-// 
-// 		}
-// 		delete[] K1;delete[] MT1;delete[] M1;delete[] temp;delete[] temp1;delete[] temp2;delete[] z;delete[] temp3;delete[] temp4;
-// 		delete[] temp5;delete[] temp6;delete[] sk;	
-// 		for (i=0;i<=m_ParaNum;i++)
-// 		{
-// 			delete[] MT[i];
-// 		}
-// 		for (i=0;i<m_PointNum;i++)
-// 		{
-// 			delete[] M[i];
-// 			delete[] K[i];
-// 		}
-// 		delete[] MT;delete[] M;delete[] K;delete[] m;	
-// 	
+
  	}
 	
 	outputdataGLS();
@@ -2021,7 +1747,6 @@ void CGLSView::predictLocalGLS()
 	m_fianlPredictPoint.RemoveAll();
 	m_fianlPredictPoint.SetSize(0);
 
-	//??????????
 	int I,J,i,j,N,n;
 	double dist=0,hh=0,Gx=0,Gy=0,rr=0,VarEsum;
 	int pro =0;
@@ -2032,39 +1757,57 @@ void CGLSView::predictLocalGLS()
 	GetNum = atoi(strNum);
 	double dyMax=1E-15;dyMin=1E+15;
 	double dxMax=1E-15;dxMin=1E+15;
-//	GetNum = m_PointArray2.GetSize();
+
+	//Checking the point array, to identify the coordinates of
+	//the rectangle which can include all the points
 	for(i=0;i<m_PointArray2.GetSize();i++)  
 	{
 		if(m_PointArray2[i][m_icolumnY-1]>Ymax)
 			Ymax=m_PointArray2[i][m_icolumnY-1];
+	
 		if(m_PointArray2[i][m_icolumnY-1]<Ymin)
 			Ymin=m_PointArray2[i][m_icolumnY-1];
+
 		if (m_PointArray2[i][m_icolumnX-1]>Xmax)
 			Xmax = m_PointArray2[i][m_icolumnX-1];
+
 		if (m_PointArray2[i][m_icolumnX-1]<Xmin)
 			Xmin = m_PointArray2[i][m_icolumnX-1];
+
 		if (m_PointArray2[i][m_icolumnData-1]>Zmax)
 			Zmax = m_PointArray2[i][m_icolumnData-1];
+
 		if (m_PointArray2[i][m_icolumnData-1]<Zmin)
 			Zmin = m_PointArray2[i][m_icolumnData-1];
 	}
+
 	dyMax= Ymax;dyMin = Ymin;dxMax =Xmax;dxMin = Xmin;
+	
 	for( i=0;i<m_PointArrayGrid2.GetSize();i++)  
 	{
 		if(m_PointArrayGrid2[i][m_icolumnY-1]>Ymax)
 			Ymax=m_PointArrayGrid2[i][m_icolumnY-1];
+	
 		if(m_PointArrayGrid2[i][m_icolumnY-1]<Ymin)
 			Ymin=m_PointArrayGrid2[i][m_icolumnY-1];
+
 		if (m_PointArrayGrid2[i][m_icolumnX-1]>Xmax)
 			Xmax = m_PointArrayGrid2[i][m_icolumnX-1];
+
 		if (m_PointArrayGrid2[i][m_icolumnX-1]<Xmin)
 			Xmin = m_PointArrayGrid2[i][m_icolumnX-1];
 	}
-	double area = (dxMax-dxMin)*(dyMax-dyMin);  //field??
-	double times = m_PointArray2.GetSize()/GetNum;//??????????
-	double perarea = area/((int)times+1);//?????
-	double ratio = fabs(sqrt(perarea/3.14));//??
-	double areaX1,areaX2,areaY1,areaY2;
+
+	double area = (dxMax-dxMin)*(dyMax-dyMin);
+	double times = m_PointArray2.GetSize()/GetNum;
+	double perarea = area/((int)times+1);
+	double ratio = fabs(sqrt(perarea/3.14));
+	
+	double areaX1;
+	double areaX2;
+	double areaY1;
+	double areaY2;
+
 	for (I=0;I<m_PointArrayGrid2.GetSize();I++)
 	{	
 		areaX1 = m_PointArrayGrid2[I][m_icolumnX-1]-ratio;
@@ -2100,7 +1843,6 @@ void CGLSView::predictLocalGLS()
 			}
 			
 			
-			//??
 			for(int i=0; i<m_PredictPoint2.GetSize()-1; i++) 
 			{ 
 				for(int j=i+1; j<m_PredictPoint2.GetSize();j++) 
@@ -2114,37 +1856,23 @@ void CGLSView::predictLocalGLS()
 				} 			
 			} 
 			N=m_PredictPoint2.GetSize();
-			m_PredictPoint2.RemoveAt(GetNum,N-GetNum);//局部采样点
+			m_PredictPoint2.RemoveAt(GetNum,N-GetNum);//Local sampling points
 		}
 		N=m_PredictPoint2.GetSize();
-		n=N+1;//?????
-///////////////////////////////
-// 		CStdioFile   fobj("c:\\points.txt",   CFile::modeCreate|CFile::modeNoTruncate    |   CFile::modeWrite);  
-// 		CString str ="\n";
-// 		fobj.SeekToEnd();				   
-// 		//	fobj.WriteString(str);  
-// 		for (int i =0;i<N;i++)
-// 		{	
-// 			str.Format("%f,%f,%f,%f,%f,%f\n",
-// 				m_PredictPoint2[i][0],	
-// 				m_PredictPoint2[i][1],
-// 				m_PredictPoint2[i][2],
-// 				m_PredictPoint2[i][3],
-// 				m_PredictPoint2[i][4],
-// 				m_PredictPoint2[i][5]);								   
-// 			fobj.WriteString(str); 
-// 		}
-// 	fobj.Close(); 
-		double **A=new double *[n];//????
+		n=N+1;
+
+		double **A=new double *[n];
 		double *A1 = new double[n*n];
 		double *p = new double[n];
 		double *z = new double[N];
+
 		for(i=0;i<n;i++)
 		{
 			A[i]=new double[n];
 		}
-		double *B=new double[n];//????
-		double k0 ;
+
+		double *B=new double[n];
+		double k0;
 		double	*bf = new double[m_ParaNum+1];
 		double *sk = new double[N];
 		double *temp = new double[N*(m_ParaNum+1)];
@@ -2189,9 +1917,9 @@ void CGLSView::predictLocalGLS()
 		}
 		for(i=0;i<N;i++) 
 			for(int j=0;j<=m_ParaNum;j++)
-				MT[j][i]=M[i][j]; 	//M ?????
+				MT[j][i]=M[i][j];
 		double *M1 = new double[N*(m_ParaNum+1)];
-		double *MT1 = new double[N*(m_ParaNum+1)];//M ?????
+		double *MT1 = new double[N*(m_ParaNum+1)];
 		
 		int k = 0;
 		for (i=0;i<N;i++)
