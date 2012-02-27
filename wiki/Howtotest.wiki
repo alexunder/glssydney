@@ -1,0 +1,17 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+In order to develop and test our tool, we could test it with exsiting
+data firstly. The section below will introduce the details of testing 
+with data.
+
+= Details =
+
+Look the picture below:
+http://glssydney.googlecode.com/svn/trunk/wiki/test_pic.PNG
+  # Data: select “test.txt” file.
+  # Grid: select “validation.txt” file.
+  # Click button "See data", then you will see the data structure in the    static control.
+  # Fill the edit boxes like the picture.
+  # Ignore the other setup boxes for the time being, just run in the simplest way
