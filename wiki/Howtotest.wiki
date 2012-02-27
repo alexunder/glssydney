@@ -1,4 +1,4 @@
-#How to test with the exsiting data
+#summary How to test with the exsiting data
 
 = Introduction =
 
@@ -16,4 +16,4 @@ http://glssydney.googlecode.com/svn/wiki/images/test_pic.png
   # Grid: select “validation.txt” file.
   # Click button "See data", then you will see the data structure in the    static control.
   # Fill the edit boxes like the picture.
-  # Ignore the other setup boxes for the time being, just run in the simplest way
+  # Ignore the other setup boxes for the time being, just run in the simplest way.
