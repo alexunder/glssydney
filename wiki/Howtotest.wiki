@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#How to test with the exsiting data
 
 = Introduction =
 
@@ -9,7 +9,9 @@ with data.
 = Details =
 
 Look the picture below:
+
 http://glssydney.googlecode.com/svn/wiki/images/test_pic.png
+
   # Data: select “test.txt” file.
   # Grid: select “validation.txt” file.
   # Click button "See data", then you will see the data structure in the    static control.
